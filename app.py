@@ -50,7 +50,7 @@ class submitForm(FlaskForm):
     submit = SubmitField('提交')
 
 
-class NameForm(Form):
+class NameForm(FlaskForm):
     name = StringField('你的名字是?', validators=[DataRequired()])
     submit = SubmitField('提交')
 
@@ -62,18 +62,20 @@ def hello_world(name):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    response = make_response('<h1>This document carries a cookie!</h1>')
-    response.set_cookie('answer', '42')
     form = NameForm()
     if form.validate_on_submit():
-        old_name = session.get('name')
-        if old_name is not None and old_name != form.name.data:
-            flash('您更新了名字 !')
+        user = User.query.filter_by(username=form.name.data).first()
+        if user is None:
+            user = User(username=form.name.data)
+            db.session.add(user)
+            session['Known'] = False
+        else:
+            session['Known'] = True
         session['name'] = form.name.data
         return redirect(url_for('index'))
 
     return render_template('index.html', form=form, name=session.get('name'),
-                           current_time=datetime.utcnow())
+                           current_time=datetime.utcnow(), known=session.get('Known', False))
 
 
 @app.route('/idcard', methods=['GET', 'POST'])
