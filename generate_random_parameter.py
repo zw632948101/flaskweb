@@ -141,12 +141,3 @@ class generateRandomParameter:
         if term != "1" and ("1001", "一次还清") in allowlist:
             allowlist.remove(("1001", "一次还清"))
         return self.getListElement(allowlist)
-
-
-print(generateRandomParameter().generateIdCard())
-
-# coefficient = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
-# idCard = "51302919920403495"
-# zip1 = zip(coefficient, [int(i) for i in idCard])
-# print(type(zip1))
-# print([a*b for a,b in zip1])

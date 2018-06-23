@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, request, make_response, redirect, abort, render_template, session, url_for, flash
-from flask_script import Manager
+from flask_script import Manager, Shell
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from datetime import datetime
@@ -10,6 +10,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from generate_random_parameter import generateRandomParameter as generate
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import MigrateCommand, Migrate
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -100,6 +101,14 @@ def page_not_page(e):
 def internal_server_error(e):
     return render_template('500.html'), 500
 
+
+def make_shell_context():
+    return dict(app=app, db=db, User=User, Role=Role)
+
+
+manager.add_command("shell", Shell(make_context=make_shell_context))
+migrate = Migrate(app, db)
+manager.add_command('db', MigrateCommand)
 
 if __name__ == '__main__':
     manager.run()
