@@ -1,14 +1,14 @@
 import os
 
-from flask import Flask, request, make_response, redirect, abort, render_template, session, url_for, flash
+from flask import Flask, redirect, render_template, session, url_for
 from flask_script import Manager, Shell
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from datetime import datetime
-from flask_wtf import Form, FlaskForm
+from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-from generate_random_parameter import generateRandomParameter as generate
+from app.generate.generate_random_parameter import generateRandomParameter as generate
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import MigrateCommand, Migrate
 
