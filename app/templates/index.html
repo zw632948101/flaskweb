@@ -9,12 +9,11 @@
 
 {% block page_content %}
     <div class="page-header">
-        <p>你好,{% if name %}{{ name }}{% else %}新人{% endif %}</p>
+        <p>你好,{% if current_user.is_authenticated %}{{ current_user.username }}{% else %}新人{% endif %}</p>
         {% if not known %} <p>见到您真高兴 !</p>
         {% else %} <p>很高兴再次见到你 !</p>
         {% endif %}
     </div>
-    {{ wtf.quick_form(form) }}
     <div class="page-header">
         <p>刷新页面的时间: {{ moment(current_time).format('YYYY-MM-DD hh:mm:ss a') }}</p>
         <p>刷新页面于{{ moment(current_time).fromNow(refresh=True) }}</p>

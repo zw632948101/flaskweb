@@ -17,26 +17,9 @@ def hello_world(name):
     return render_template('user.html', name=name)
 
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/')
 def index():
-    app = current_app._get_current_object()
-    form = NameForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if user is None:
-            user = User(username=form.name.data)
-            db.session.add(user)
-            session['Known'] = False
-            if app.config['FLASKY_ADMIN']:
-                send_email(app.config['FLASKY_ADMIN'], 'New User', 'mail/new_user', name=user)
-        else:
-            session['Known'] = True
-        session['name'] = form.name.data
-        form.name.data = ''
-        return redirect(url_for('.index'))
-
-    return render_template('index.html', form=form, name=session.get('name'),
-                           current_time=datetime.utcnow(), known=session.get('Known', False))
+    return render_template('index.html', current_time=datetime.utcnow())
 
 
 @main.route('/idcard', methods=['GET', 'POST'])
