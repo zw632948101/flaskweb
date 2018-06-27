@@ -7,7 +7,7 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, login_user, logout_user, current_user
 from .forms import LonginForm, RegistrationForm
 from ..eamil import send_email
-from app import create_app
+
 
 __author__ = 'wei.zhang'
 
@@ -47,7 +47,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
-        send_email(app.config['FLASKY_ADMIN'], '确认你的账户.', 'auth/email/confirm', user=user, token=token)
+        send_email('632948101@qq.com', '确认你的账户.', 'auth/email/confirm', user=user, token=token)
         flash("注册成功,请到邮箱中确认你的账户")
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
