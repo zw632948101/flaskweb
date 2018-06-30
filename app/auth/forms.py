@@ -10,6 +10,7 @@ __author__ = 'wei.zhang'
 
 
 class LonginForm(FlaskForm):
+    """登录表单"""
     email = StringField('邮箱 :', validators=[DataRequired(), Length(1, 64), Email()])
     password = PasswordField('密码 :', validators=[DataRequired()])
     remember_me = BooleanField('记住密码')
@@ -17,7 +18,8 @@ class LonginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    email = StringField('邮箱 : ', validators=[DataRequired(), Length(1, 64), Email()])
+    """注册账户表单"""
+    email = StringField('邮箱 : ', validators=[DataRequired(), Length(1, 64, message="邮箱格式错误,请重新姿态那些."), Email()])
     username = StringField('昵称 : ', validators=[DataRequired(), Length(1, 64), Regexp('^[A-za-z][A-Za-z0-9_.]*$', 0,
                                                                                       '昵称必须只能是字母,数字,下划线和点')])
     password = PasswordField('密码 : ', validators=[DataRequired(), EqualTo('password2', message='密码不一致')])
@@ -31,3 +33,11 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('昵称已被注册')
+
+
+class ChangePasswordForm(FlaskForm):
+    """修改密码表单"""
+    old_password = PasswordField("原密码 :", validators=[DataRequired()])
+    new_password = PasswordField("新密码 :", validators=[DataRequired(), EqualTo("new_password2", message="两次密码不一致")])
+    new_password2 = PasswordField("确认密码:", validators=[DataRequired()])
+    submit = SubmitField("修改密码")
