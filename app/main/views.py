@@ -2,11 +2,10 @@
 # ! _*_ coding:utf-8 _*_
 
 from datetime import datetime
-from flask import render_template, session, redirect, url_for
-
-from app.email import send_email
+from flask import render_template, session, redirect, url_for, current_app
+from app.eamil import send_email
+from ..main.forms import NameForm, submitForm
 from . import main
-from .forms import NameForm, submitForm
 from .. import db
 from ..models import User
 from ..generate.generate_random_parameter import generateRandomParameter as generate
@@ -38,6 +37,10 @@ def index():
 
     return render_template('index.html', form=form, name=session.get('name'),
                            current_time=datetime.utcnow(), known=session.get('Known', False))
+
+@main.route('/')
+def index():
+    return render_template('index.html', current_time=datetime.utcnow())
 
 
 @main.route('/idcard', methods=['GET', 'POST'])

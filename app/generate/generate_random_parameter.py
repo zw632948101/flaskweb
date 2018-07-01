@@ -82,7 +82,7 @@ class generateRandomParameter:
         """
         coefficient = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
         # idCardNumber = map(lambda a: a[0] * a[1],[i for i in zip(coefficient, [int(i) for i in idCard])])
-        idCardNumber = [a*b for a,b in zip(coefficient, [int(i) for i in idCard])]
+        idCardNumber = [a * b for a, b in zip(coefficient, [int(i) for i in idCard])]
         endNumber = ['1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2']
         idCardSun = 0
         for i in idCardNumber: idCardSun += i
@@ -93,7 +93,7 @@ class generateRandomParameter:
         创建一个随机的身份证
         :return:
         """
-        AdministrativeCode = open('AdministrativeCode.txt', 'r')
+        AdministrativeCode = open('./app/generate/AdministrativeCode.txt', 'r')
         ACode = self.random.choice(AdministrativeCode.read().split(','))
         randomYear = self.random.randint(1950, 2010)
         randomMonth = str(self.random.randint(1, 12))

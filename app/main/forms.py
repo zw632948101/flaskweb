@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # ! _*_ coding:utf-8 _*_
-from wtforms.validators import DataRequired
-from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField
 
 __author__ = 'wei.zhang'
+
+from flask_wtf import FlaskForm
+from wtforms import SubmitField, StringField
+from wtforms.validators import DataRequired
+
 
 
 class submitForm(FlaskForm):

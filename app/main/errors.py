@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # ! _*_ coding:utf-8 _*_
 
-from flask import render_template
 from . import main
-
+from flask import render_template
 __author__ = 'wei.zhang'
-
 
 @main.app_errorhandler(404)
 def page_not_page(e):
