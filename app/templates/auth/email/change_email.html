@@ -1,0 +1,9 @@
+<p>尊敬的 {{ user.username }},</p>
+<p>确认你的新邮箱地址 <a href="{{ url_for('auth.change_email', token=token, _external=True) }}">点击这里</a>.</p>
+<p>或者您可以在浏览器的地址栏中粘贴以下链接:</p>
+<p>{{ url_for('auth.change_email', token=token, _external=True) }}</p>
+<p>真诚地,</p>
+<p>Flasky团队</p>
+<p>
+    <small>注意: 你可以对这个邮件进行回复.</small>
+</p>

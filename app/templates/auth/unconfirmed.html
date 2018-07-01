@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %} Flask - 重发邮件{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1> 你好! {{ current_user.username }}</h1>
+        <h3>你还没有激活账户.</h3>
+        <p>如果你要访问网站,需要激活你的账户.</p>
+        <p>检查你的邮箱,你应该收到一封激活链接的电子邮件</p>
+        <p>如没有请点击重新发送激活邮件.<br/>
+            <a href="{{ url_for('auth.login_confirmation') }}">点击重新发送激活邮件</a>
+        </p>
+    </div>
+{% endblock %}

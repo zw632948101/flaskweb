@@ -1,0 +1,5 @@
+欢迎来到这里
+激活你的账户,请点击下方链接:
+{{ url_for('auth.confirm', token=token, _external=True) }}
+这是Flask练习
+注意,这个邮件不要回复.
