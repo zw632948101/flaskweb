@@ -49,4 +49,3 @@ config = {
     'default': DevelopmentConfig
 }
 
-print(dir(DevelopmentConfig)[0].isupper())
