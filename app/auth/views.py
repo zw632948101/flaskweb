@@ -5,7 +5,8 @@ from app.models import User
 from . import auth
 from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, login_user, logout_user, current_user
-from .forms import LonginForm, RegistrationForm, ChangePasswordForm
+from .forms import LonginForm, RegistrationForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm, \
+    ChangeEmailReauestForm, ChangeUsernameForm
 from ..eamil import send_email
 
 __author__ = 'wei.zhang'
@@ -14,6 +15,8 @@ __author__ = 'wei.zhang'
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     """登录"""
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
     form = LonginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
@@ -99,6 +102,8 @@ def login_confirmation():
 @login_required
 def change_password():
     """修改密码"""
+    if current_user.is_anonymous:
+        return redirect(url_for('auth.login'))
     form = ChangePasswordForm()
     if form.validate_on_submit():
         if current_user.verify_password(form.old_password.data):
@@ -112,6 +117,85 @@ def change_password():
                 flash("新密码不能与旧密码相同.")
         else:
             flash("旧密码错误,请输入正确的旧密码")
-    return render_template("auth/reset_password.html", form=form)
+    return render_template("auth/change_password.html", form=form)
 
-# def password_reset_request():
+
+@auth.route('/reset', methods=['GET', 'POST'])
+def password_reset_request():
+    """发送重置密码邮件"""
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = PasswordResetRequestForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        if user:
+            token = user.generate_confirmation_token()
+            # send_email(user.email, '重置密码', 'auth/email/reset_password', user=user, token=token)
+            send_email("632948101@qq.com", '重置密码', 'auth/email/reset_password', user=user, token=token)
+            flash("已发送重置密码邮件,请到邮箱中查看")
+            return redirect(url_for('auth.login'))
+    return render_template('auth/reset_password.html', form=form)
+
+
+@auth.route('/reset/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """设置重置密码"""
+    if not current_user.is_anonymous:
+        return redirect(url_for('main.index'))
+    form = PasswordResetForm()
+    if form.validate_on_submit():
+        if User.reset_password(token, form.password.data):
+            if User.reset_pasword_verify(token, form.password.data):
+                db.session.commit()
+                flash("密码重置成功")
+                return redirect(url_for('auth.login'))
+            else:
+                flash("新密码不能与旧密码相同.")
+        else:
+            return redirect(url_for('main.index'))
+    return render_template('auth/reset_password.html', form=form)
+
+
+@auth.route('change_email', methods=['GET', 'POST'])
+def change_email_request():
+    if current_user.is_anonymous:
+        return redirect(url_for('auth.login'))
+    form = ChangeEmailReauestForm()
+    if form.validate_on_submit():
+        if current_user.verify_password(form.password.data):
+            new_email = form.email.data
+            token = current_user.generate_email_change_toekn(new_email)
+            # send_email(new_email, "修改邮箱", 'auth/email/change_email', user=current_user, token=token)
+            send_email("632948101@qq.com", "修改邮箱", 'auth/email/change_email', user=current_user, token=token)
+            flash("修改邮箱激活邮件已发送到你新邮箱,请查收")
+            return redirect(url_for('main.index'))
+        else:
+            flash("无效的邮箱或密码")
+    return render_template('auth/change_email.html', form=form)
+
+
+@auth.route('change_email/<token>')
+@login_required
+def change_email(token):
+    if current_user.change_email(token):
+        db.session.commit()
+        flash("你的电子邮箱已更新")
+    else:
+        flash("无效的请求")
+    return redirect(url_for('main.index'))
+
+
+@auth.route('/change_username', methods=['GET', 'POST'])
+@login_required
+def change_username():
+    """修改昵称"""
+    if current_user.is_anonymous:
+        return redirect(url_for('auth.login'))
+    form = ChangeUsernameForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        db.session.add(current_user)
+        db.session.commit()
+        flash("修改昵称成功")
+        return redirect(url_for('main.index'))
+    return render_template('auth/change_username.html', form=form)
