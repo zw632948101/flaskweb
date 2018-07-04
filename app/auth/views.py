@@ -3,7 +3,7 @@
 from app import db
 from app.models import User
 from . import auth
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
 from .forms import LonginForm, RegistrationForm, ChangePasswordForm, PasswordResetForm, PasswordResetRequestForm, \
     ChangeEmailReauestForm, ChangeUsernameForm
@@ -75,6 +75,7 @@ def confirm(token):
 def before_request():
     """使用钩子,判断登录用户是否激活"""
     if current_user.is_authenticated:
+        current_user.ping()
         if not current_user.confirmed and request.endpoint[:5] != 'auth.' and request.endpoint != 'static':
             return redirect(url_for('auth.unconfirmed'))
 
@@ -199,3 +200,6 @@ def change_username():
         flash("修改昵称成功")
         return redirect(url_for('main.index'))
     return render_template('auth/change_username.html', form=form)
+
+
+

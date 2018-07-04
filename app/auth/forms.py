@@ -23,7 +23,7 @@ class RegistrationForm(FlaskForm):
     username = StringField('昵称 : ', validators=[DataRequired(), Length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
                                                                                       '昵称必须只能是字母,数字,下划线和点')])
     password = PasswordField('密码 : ', validators=[DataRequired(), EqualTo('password2', message='密码不一致'),
-                                                  Regexp('^[A-Z]*$', 0, "密码必须以大写字母开头")])
+                                                  Regexp('^[A-Z][A-Za-z0-9_.]*$', 0, "密码必须以大写字母开头")])
     password2 = PasswordField('确认密码:', validators=[DataRequired()])
     submit = SubmitField("注册")
 
@@ -43,6 +43,7 @@ class ChangePasswordForm(FlaskForm):
                                                       Regexp('^[A-Z][A-Za-z0-9_.]*$', 0, "密码必须以大写字母开头")])
     new_password2 = PasswordField("确认密码:", validators=[DataRequired()])
     submit = SubmitField("修改密码")
+
 
 
 class PasswordResetForm(FlaskForm):

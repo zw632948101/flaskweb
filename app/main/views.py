@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # ! _*_ coding:utf-8 _*_
 from datetime import datetime
-from flask import render_template, session, redirect, url_for, current_app
+from flask import render_template, session, redirect, url_for, current_app, abort
 from app.eamil import send_email
 from ..main.forms import NameForm, submitForm
 from . import main
@@ -33,3 +33,11 @@ def generate_idcard():
 @main.route('/redirection')
 def redirection():
     return redirect('http://www.baidu.com')
+
+
+@main.route('/user/<username>')
+def user(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        abort(404)
+    return render_template('user.html', user=user)
