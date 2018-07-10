@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # ! _*_ coding:utf-8 _*_
 from datetime import datetime
-from flask import render_template, session, redirect, url_for, current_app, abort, flash
+from flask import render_template, session, redirect, url_for, abort, flash
 from flask_login import current_user, login_required
-
-from app.eamil import send_email
-from ..main.forms import NameForm, submitForm, EditProfileForm
+from ..main.forms import submitForm, EditProfileForm
 from . import main
 from .. import db
 from ..models import User
