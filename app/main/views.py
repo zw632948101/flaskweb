@@ -12,11 +12,6 @@ from ..generate.generate_random_parameter import generateRandomParameter as gene
 __author__ = 'wei.zhang'
 
 
-@main.route('/user/<name>')
-def hello_world(name):
-    return render_template('user.html', name=name)
-
-
 @main.route('/')
 def index():
     return render_template('index.html', current_time=datetime.utcnow())
