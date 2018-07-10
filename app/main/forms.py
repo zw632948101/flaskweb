@@ -3,8 +3,8 @@
 __author__ = 'wei.zhang'
 
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, StringField
-from wtforms.validators import DataRequired
+from wtforms import SubmitField, StringField, TextAreaField
+from wtforms.validators import DataRequired, Length
 
 
 class submitForm(FlaskForm):
@@ -14,3 +14,11 @@ class submitForm(FlaskForm):
 class NameForm(FlaskForm):
     name = StringField('你的名字是?', validators=[DataRequired()])
     submit = SubmitField('提交')
+
+
+class EditProfileForm(FlaskForm):
+    name = StringField('真实姓名:', validators=[Length(0, 64)])
+    location = StringField("联系地址:", validators=[Length(0, 64)])
+    about_me = TextAreaField("自诉 : ")
+    submit = SubmitField('提交')
+
