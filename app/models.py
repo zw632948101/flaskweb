@@ -175,7 +175,7 @@ class User(UserMixin, db.Model):
         return True
 
     def can(self, permissions):
-        return self.role_id is not None and (self.role_id.permissions & permissions) == permissions
+        return self.role_id is not None and self.role.hash_permission(permissions)
 
     def is_administrator(self):
         return self.can(Permissions.ADMINISTER)
