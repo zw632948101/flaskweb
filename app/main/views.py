@@ -3,19 +3,26 @@
 from datetime import datetime
 from flask import render_template, session, redirect, url_for, abort, flash
 from flask_login import current_user, login_required
-from ..main.forms import submitForm, EditProfileForm, EditProfileAdminForm
+from ..main.forms import submitForm, EditProfileForm, EditProfileAdminForm, PostForm
 from . import main
 from .. import db
-from ..models import User, Role
+from ..models import User, Role, Permissions, Post
 from ..generate.generate_random_parameter import generateRandomParameter as generate
 from ..decorators import admin_required
 
 __author__ = 'wei.zhang'
 
 
-@main.route('/')
+@main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', current_time=datetime.utcnow())
+    form = PostForm()
+    if current_user.can(Permissions.WRITE_ARTICLES) and form.validate_on_submit():
+        post = Post(body=form.body.data, author=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
+        return redirect(url_for('.index'))
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', form=form, posts=posts)
 
 
 @main.route('/idcard', methods=['GET', 'POST'])
@@ -33,9 +40,7 @@ def redirection():
 
 @main.route('/user/<username>')
 def user(username):
-    user = User.query.filter_by(username=username).first()
-    if user is None:
-        abort(404)
+    user = User.query.filter_by(username=username).first_or_404()
     return render_template('user.html', user=user)
 
 
