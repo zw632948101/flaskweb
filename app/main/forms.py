@@ -7,7 +7,7 @@ __author__ = 'wei.zhang'
 from flask_wtf import FlaskForm
 from wtforms import SubmitField, StringField, TextAreaField, BooleanField, SelectField
 from wtforms.validators import DataRequired, Length, Email, Regexp, ValidationError
-
+from flask_pagedown.fields import PageDownField
 
 class submitForm(FlaskForm):
     submit = SubmitField('提交')
@@ -51,5 +51,5 @@ class EditProfileAdminForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    body = TextAreaField('发表你的看法', validators=[DataRequired()])
+    body = PageDownField('发表你的看法', validators=[DataRequired()])
     submit = SubmitField('提交文章')
