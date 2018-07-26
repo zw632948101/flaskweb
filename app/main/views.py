@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # ! _*_ coding:utf-8 _*_
 from datetime import datetime
-from flask import render_template, session, redirect, url_for, request, flash, current_app
+from flask import render_template, session, redirect, url_for, request, flash, current_app, abort
 from flask_login import current_user, login_required
 from ..main.forms import submitForm, EditProfileForm, EditProfileAdminForm, PostForm
 from . import main
@@ -96,4 +96,21 @@ def edit_profile_admin(id):
 @main.route('/post/<int:id>')
 def post(id):
     post = Post.query.get_or_404(id)
-    return render_template('post.html', post=post)
+    return render_template('post.html', post=[post])
+
+
+@main.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit(id):
+    post = Post.query.get_or_404(id)
+    if current_user != post.author and not current_user.can(Permissions.ADMINISTER):
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.body = form.body.data
+        db.session.add(post)
+        db.session.commit()
+        flash("文章更新成功.")
+        return redirect(url_for('.post', id=post.id))
+    form.body.data = post.body
+    return render_template('edit_post.html', form=form)
