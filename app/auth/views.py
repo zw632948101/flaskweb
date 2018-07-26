@@ -51,8 +51,8 @@ def register():
         db.session.add(user)
         db.session.commit()
         token = user.generate_confirmation_token()
-        # send_email(user.email, '确认你的账户.', 'auth/email/confirm', user=user, token=token)
-        send_email('632948101@qq.com', '确认你的账户.', 'auth/email/confirm', user=user, token=token)
+        send_email(user.email, '确认你的账户.', 'auth/email/confirm', user=user, token=token)
+        # send_email('632948101@qq.com', '确认你的账户.', 'auth/email/confirm', user=user, token=token)
         flash("注册成功,请到邮箱中确认你的账户")
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
@@ -93,8 +93,8 @@ def unconfirmed():
 def login_confirmation():
     """重发激活邮件"""
     token = current_user.generate_confirmation_token()
-    # send_email(current_user.email, "重新发送确认邮件", 'auth/email/confirm', user=current_user, token=token)
-    send_email('632948101@qq.com', "重新发送确认邮件", 'auth/email/confirm', user=current_user, token=token)
+    send_email(current_user.email, "重新发送确认邮件", 'auth/email/confirm', user=current_user, token=token)
+    # send_email('632948101@qq.com', "重新发送确认邮件", 'auth/email/confirm', user=current_user, token=token)
     flash("已重新发送确认邮件至注册邮箱")
     return redirect(url_for('main.index'))
 
@@ -131,8 +131,8 @@ def password_reset_request():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
             token = user.generate_confirmation_token()
-            # send_email(user.email, '重置密码', 'auth/email/reset_password', user=user, token=token)
-            send_email("632948101@qq.com", '重置密码', 'auth/email/reset_password', user=user, token=token)
+            send_email(user.email, '重置密码', 'auth/email/reset_password', user=user, token=token)
+            # send_email("632948101@qq.com", '重置密码', 'auth/email/reset_password', user=user, token=token)
             flash("已发送重置密码邮件,请到邮箱中查看")
             return redirect(url_for('auth.login'))
     return render_template('auth/reset_password.html', form=form)
@@ -166,8 +166,8 @@ def change_email_request():
         if current_user.verify_password(form.password.data):
             new_email = form.email.data
             token = current_user.generate_email_change_toekn(new_email)
-            # send_email(new_email, "修改邮箱", 'auth/email/change_email', user=current_user, token=token)
-            send_email("632948101@qq.com", "修改邮箱", 'auth/email/change_email', user=current_user, token=token)
+            send_email(new_email, "修改邮箱", 'auth/email/change_email', user=current_user, token=token)
+            # send_email("632948101@qq.com", "修改邮箱", 'auth/email/change_email', user=current_user, token=token)
             flash("修改邮箱激活邮件已发送到你新邮箱,请查收")
             return redirect(url_for('main.index'))
         else:
